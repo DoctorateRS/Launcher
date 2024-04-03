@@ -266,6 +266,8 @@ def start_frida_hook(adb_device: ppadb.device.Device, config: dict[str, Any]) ->
 
     s = Path("_.js").read_text(encoding="utf-8")
 
+    vision = Path("vision.js").read_text(encoding="utf-8")
+
     s = (
         s.replace("@@@DOCTORATE_HOST@@@", "NO_PROXY" if config["server"]["noProxy"] else config["server"]["host"], 1)
         .replace("@@@DOCTORATE_PORT@@@", str(config["server"]["port"]), 1)
@@ -274,8 +276,10 @@ def start_frida_hook(adb_device: ppadb.device.Device, config: dict[str, Any]) ->
     )
 
     script = session.create_script(s)
+    vision_script = session.create_script(vision)
     script.on("message", on_message)
     script.load()
+    vision_script.load()
     stdout.info("Launching game...")
     sys.stdin.read()
     session.detach()
