@@ -285,4 +285,4 @@ def start_frida_hook(adb_device: ppadb.device.Device, config: dict[str, Any]) ->
     session.detach()
 
 
-main("platform-tools\\adb.exe", 30, threading.Event(), sys.version_info)
+main("platform-tools\\adb.exe", 30, threading.Event())
