@@ -32,8 +32,12 @@ if '%errorlevel%' NEQ '0' (
 	python -m venv %virtualEnvironmentFolder%
 	call %virtualEnvironmentFolder%\scripts\activate.bat
    pip install requests
+   pip install flask
    pip install frida
+   pip install pycryptodome
    pip install pure-python-adb
+	::pip install uv
+	::uv pip install -r pyproject.toml
 ) else (
 	echo Found virtual environment. Running...
 )
