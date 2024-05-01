@@ -3,7 +3,7 @@ import lzma
 import os
 import random
 import secrets
-import subprocess  # noqa: S404 - ur mother is possibly insecure
+import subprocess
 import sys
 import threading
 import time
