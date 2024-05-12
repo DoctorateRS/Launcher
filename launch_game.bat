@@ -1,46 +1,35 @@
-@echo off
-@title Launcher
+@ECHO OFF
+@TITLE ODPy
 
 python --version 2>NUL
-if errorlevel 1 (
-	echo Python not installed or not added to the PATH environmental variable. Install Python at https://www.python.org/downloads and make sure to select 'Add Python to environmental variables' when installing.
-	pause
-	exit
+if ERRORLEVEL 1 (
+	ECHO Python not installed or not added to the PATH environmental variable. Install Python at https://www.python.org/downloads and make sure to select 'Add Python to environmental variables' when installing.
+	PAUSE
+	EXIT
 )
 
-python -c "import sys; exit(0 if sys.version_info >= (3, 12) else 1)"
-if errorlevel 1 (
-	echo Python version too old. Minimum required version is 3.12. Upgrade Python at https://www.python.org/downloads and make sure to select 'Add Python to environmental variables' when installing.
-	pause
-	exit
+python -c "import sys; exit(0 if sys.version_info >= (3, 11) else 1)"
+IF ERRORLEVEL 1 (
+	ECHO Python version too old. Minimum required version is 3.11. Upgrade Python at https://www.python.org/downloads and make sure to select 'Add Python to environmental variables' when installing.
+	PAUSE
+	EXIT
 )
 
-set "oldVirtualEnvironmentFolder=oldEnv"
-set "virtualEnvironmentFolder=env"
+SET "venv=env"
 
-if exist %oldVirtualEnvironmentFolder%\ (
-  echo Doing cleanup
-  rmdir /S /Q %oldVirtualEnvironmentFolder%
-) else (
-  echo No cleanup to do
+CALL %venv%\scripts\activate.bat
+
+IF '%errorlevel%' NEQ '0' (
+	ECHO No virtual environment found. Creating...
+	python -m venv %venv%
+	CALL %venv%\scripts\activate.bat
+	pip install uv
+	uv pip install frida pure-python-adb regex requests flask pycryptodome
+) ELSE (
+	ECHO Found virtual environment. Running...
 )
 
-call %virtualEnvironmentFolder%\scripts\activate.bat
-
-if '%errorlevel%' NEQ '0' (
-	echo No virtual environment found. Creating...
-	python -m venv %virtualEnvironmentFolder%
-	call %virtualEnvironmentFolder%\scripts\activate.bat
-@REM    pip install requests
-@REM    pip install flask
-@REM    pip install frida
-@REM    pip install pycryptodome
-@REM    pip install pure-python-adb
-@REM 	pip install uv
-@REM	uv pip install -r pyproject.toml
-) else (
-	echo Found virtual environment. Running...
-)
-
-echo Checking for updates...
+ECHO Checking for updates...
 python launch_game.py
+
+PAUSE
